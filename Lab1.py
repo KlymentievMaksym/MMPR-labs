@@ -11,7 +11,18 @@ import numpy as np
 # [1, 0, 1, 1, 1]
 # [0, 1, 0, 0, 0]
 
-r = np.matrix([[1, 1, 0, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 1],[1, 0, 1, 1, 1],[0, 1, 0, 0, 0]])
+r = np.matrix([[1, 1, 0, 1, 0],
+               [1, 1, 1, 1, 0],
+               [0, 0, 0, 0, 1],
+               [1, 0, 1, 1, 1],
+               [0, 1, 0, 0, 0]])
+
+# r = np.matrix([[0, 1, 0, 1],
+#                [0, 0, 1, 0],
+#                [1, 1, 1, 0],
+#                [1, 0, 1, 1]])
+
+# r = np.matrix([[1, 1, 1],[1, 1, 1],[1, 1, 1]])
 # print(r.shape)
 
 # Відношення R називається рефлексивним, якщо
@@ -70,9 +81,9 @@ def check_sym(r):
 
     for i in range(r.shape[0]):
         for j in range(r.shape[1]):
-            if r[i, j] == r[j, i]:
+            if r[i, j] == r[j, i] and i != j:
                 is_sym = True
-            elif is_sym and r[i, j] != r[j, i]:
+            elif is_sym and r[i, j] != r[j, i] and i != j:
                 is_sym = False
             elif i != j and not ((r[i, j] and r[j, i]) == 0):
                 is_antisym = True
@@ -80,7 +91,7 @@ def check_sym(r):
                 is_asym = True
             else:
                 is_asym = False
-    return ["Neither sym nor antisym", ["Sym", "Antisym"][is_antisym]][is_sym and is_antisym] + [", Not asym", ", Asym"][is_asym]
+    return ["Neither sym nor antisym", ["Sym", "Antisym"][is_antisym]][is_sym or is_antisym] + [", Not asym", ", Asym"][is_asym]
 
 
 # Відношення R називається транзитивним, якщо
@@ -193,10 +204,10 @@ best2, worst2 = find_best_and_worst(r_t, is_row=False)
 best1 += best2
 worst1 += worst2
 
-print(f"\nBest is: {list(set(best1))}\nWorst is: {list(set(worst1))}")
+print(f"\nBest is: {list(set(best1))}(Rows that has only 1)\nWorst is: {list(set(worst1))}(Cols that has only 1)")
 
 maxi, mini = find_max_and_min(r)
-print(f"\nMax is: {maxi}\nMin is: {mini}")
+print(f"\nMax is: {maxi}(Cols that has only 0)\nMin is: {mini}(Rows that has only 0)")
 
 try:
     r_1 = r**(-1)
