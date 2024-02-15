@@ -11,7 +11,7 @@ import numpy as np
 # [1, 0, 1, 1, 1]
 # [0, 1, 0, 0, 0]
 
-r = np.array([[1, 1, 0, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 1],[1, 0, 1, 1, 1],[0, 1, 0, 0, 0]])
+r = np.matrix([[1, 1, 0, 1, 0],[1, 1, 1, 1, 0],[0, 0, 0, 0, 1],[1, 0, 1, 1, 1],[0, 1, 0, 0, 0]])
 # print(r.shape)
 
 # Відношення R називається рефлексивним, якщо
@@ -42,24 +42,51 @@ def check_refl(r):
             break
         i += 1
         j += 1
-    return ["Nor refl nor antirefl", ["Refl", "Antirefl"][is_antirefl]][is_refl or is_antirefl]
-
-print(check_refl(r))
+    return ["Neither refl nor antirefl", ["Refl", "Antirefl"][is_antirefl]][is_refl or is_antirefl]
 
 
 # Відношення R називається симетричним, якщо
 # x R y ⇒ y R x
+# Матриця симетричного відношення теж симетрична, тобто a(ij) = a(ji) для
+# всіх значень i, j. 
 
 # Відношення R називається асиметричним, якщо
 # R cross R^-1 = 0 (тобто з двох виразів x R y та y R x хоча б один не відповідає
 # дійсності). 
+# У матриці симетричного відношення a(ij) ∧ a(ji) = 0 для всіх значень i, j.
+# Інакше кажучи, з двох симетричних елементів a(ij) і a(ji) хоча б один обов’язково
+# дорівнює 0.
 
 # Відношення R називається антисиметричним,
 # якщо твердження x R y та y R x можуть бути правильними одночасно тоді й
 # тільки тоді, коли x = y. 
+# У матриці антисиметричного відношення a(ij) ∧ a(ji) = 0, коли i ≠ j . 
+
+def check_sym(r):
+
+    is_sym = False
+    is_asym = False
+    is_antisym = False
+
+    for i in range(r.shape[0]):
+        for j in range(r.shape[1]):
+            if r[i, j] == r[j, i]:
+                is_sym = True
+            elif is_sym and r[i, j] != r[j, i]:
+                is_sym = False
+            elif i != j and not ((r[i, j] and r[j, i]) == 0):
+                is_antisym = True
+            if r[i, j] and r[j, i]:
+                is_asym = True
+            else:
+                is_asym = False
+    return ["Neither sym nor antisym", ["Sym", "Antisym"][is_antisym]][is_sym and is_antisym] + [", Not asym", ", Asym"][is_asym]
+
 
 # Відношення R називається транзитивним, якщо
 # R^2 <= R ( тобто, коли з тверджень x R z та z R y випливає, що x R y ). 
+
+
 
 # Елемент * x множини Х будемо називати найкращим з огляду на
 # відношення R, якщо x R x * справедливе для всякого елемента x∈ X .
@@ -95,3 +122,30 @@ print(check_refl(r))
 # Очевидно, що
 # Ω ,\ 2 R = R (2.3)
 # тому в матричному записі ij( ) 1−= ij( ) RaRa , = ,1, nji . 
+
+# def cross(r1, r2):
+#     r = np.zeros_like(r1)
+#     for i in range(r1.shape[0]):
+#         for j in range(r1.shape[1]):
+#             r[i,j] = np.min(r1[i, j], r2[i, j])
+#     return r
+
+def addition(r):
+    r_a = np.zeros_like(r)
+    for i in range(r.shape[0]):
+        for j in range(r.shape[1]):
+            r_a[i,j] = 1 - r[i,j]
+    return r_a
+
+print(f"Our R is: \n{r}\n")
+
+print(check_refl(r))
+print(check_sym(r))
+
+try:
+    r_1 = r**(-1)
+    print(f"\nR^(-1) is: \n{r_1}")
+except np.linalg.LinAlgError:
+    print("\nIt doesn't have inverse (R^(-1))")
+
+print(f"\nR addition is: \n{addition(r)}")
