@@ -42,7 +42,7 @@ def check_refl(r):
             break
         i += 1
         j += 1
-    return ["Nor refl nor antirefl", ["Refl", "Antirefl"][is_antirefl]][is_refl]
+    return ["Nor refl nor antirefl", ["Refl", "Antirefl"][is_antirefl]][is_refl or is_antirefl]
 
 print(check_refl(r))
 
