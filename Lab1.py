@@ -110,6 +110,20 @@ def check_transit(r):
 # Елемент ∈ Xx* будемо називати найгіршим з огляду на відношення R,
 # якщо * x R x для всіх елементів x∈ X . 
 
+def find_best_and_worst(r):
+    worst = []
+    best = []
+
+    r_count = 1
+
+    for row in r:
+        if np.all(row==0):
+            worst += [r_count]
+        elif np.all(row==1):
+            best += [r_count]
+        r_count += 1 
+    return best, worst
+
 # Елемент max x називається максимальним за відношенням S R на множині
 # Х, коли для абиякого елемента x∈ X має місце твердження xRx S
 # max або
@@ -139,13 +153,6 @@ def check_transit(r):
 # Ω ,\ 2 R = R (2.3)
 # тому в матричному записі ij( ) 1−= ij( ) RaRa , = ,1, nji . 
 
-# def cross(r1, r2):
-#     r = np.zeros_like(r1)
-#     for i in range(r1.shape[0]):
-#         for j in range(r1.shape[1]):
-#             r[i,j] = np.min(r1[i, j], r2[i, j])
-#     return r
-
 def addition(r):
     r_a = np.zeros_like(r)
     for i in range(r.shape[0]):
@@ -158,6 +165,15 @@ print(f"Our R is: \n{r}\n")
 print(check_refl(r))
 print(check_sym(r))
 print(check_transit(r))
+
+r_t = r.T
+best1, worst1 = find_best_and_worst(r)
+best2, worst2 = find_best_and_worst(r_t)
+
+best1 += best2
+worst1 += worst2
+
+print(f"\nBest is: {list(set(best1))}\nWorst is: {list(set(worst1))}")
 
 try:
     r_1 = r**(-1)
