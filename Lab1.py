@@ -110,18 +110,20 @@ def check_transit(r):
 # Елемент ∈ Xx* будемо називати найгіршим з огляду на відношення R,
 # якщо * x R x для всіх елементів x∈ X . 
 
-def find_best_and_worst(r):
-    worst = []
+def find_best_and_worst(r, is_row=True, goal=1):
     best = []
+    worst = []
 
     r_count = 1
 
     for row in r:
-        if np.all(row==0):
-            worst += [r_count]
-        elif np.all(row==1):
-            best += [r_count]
-        r_count += 1 
+        if is_row:
+            if np.all(row==goal):
+                best += [r_count]
+        else: 
+            if np.all(row==goal):
+                worst += [r_count]
+        r_count += 1
     return best, worst
 
 # Елемент max x називається максимальним за відношенням S R на множині
@@ -139,6 +141,24 @@ def find_best_and_worst(r):
 # домінував елемент min x .
 # Множина мінімальних з огляду на відношення R елементів множини Х
 # позначається як min R X . 
+
+def strong_relation(r):
+    r_s = np.zeros_like(r)
+    for i in range(r.shape[0]):
+        for j in range(r.shape[1]):
+            if (r[i, j] or r[j, i]) != 0 and (r[j, i] == 0):
+                r_s[i, j] = 1
+    return r_s
+
+
+def find_max_and_min(r):
+    r_s = strong_relation(r)
+    print(f"\nStrong relation: \n{r_s}")
+    max = find_best_and_worst(r_s, is_row=False, goal=0)[1]
+    min = find_best_and_worst(r_s, goal=0)[0]
+    return max, min
+
+
 
 # Оберненим до відношення R називається
 # відношення −1 R , яке задовольняє таку умову:
@@ -168,12 +188,15 @@ print(check_transit(r))
 
 r_t = r.T
 best1, worst1 = find_best_and_worst(r)
-best2, worst2 = find_best_and_worst(r_t)
+best2, worst2 = find_best_and_worst(r_t, is_row=False)
 
 best1 += best2
 worst1 += worst2
 
 print(f"\nBest is: {list(set(best1))}\nWorst is: {list(set(worst1))}")
+
+maxi, mini = find_max_and_min(r)
+print(f"\nMax is: {maxi}\nMin is: {mini}")
 
 try:
     r_1 = r**(-1)
