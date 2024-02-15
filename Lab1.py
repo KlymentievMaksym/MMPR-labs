@@ -85,8 +85,24 @@ def check_sym(r):
 
 # Відношення R називається транзитивним, якщо
 # R^2 <= R ( тобто, коли з тверджень x R z та z R y випливає, що x R y ). 
+# Зауважимо, що умова: , 2 ≤ RR дає зручний спосіб перевірки
+# транзитивності відношення в разі, коли відношення задано за допомогою
+# матриці. Для цього необхідно обчислити матрицю відношення 2 R (тобто
+# піднести до квадрату матрицю вихідного відношення) і перевірити умову.
+# Якщо ij( )≤ ij( ) RaRa 2 для всіх значень i, j, то відношення транзитивне
 
+def check_transit(r):
+    r_2 = r**2
 
+    is_transit = False
+
+    for i in range(r.shape[0]):
+        for j in range(r.shape[1]):
+            if r_2[i, j] <= r[i, j]:
+                is_transit = True
+            elif is_transit and r_2[i, j] > r[i, j]:
+                is_transit = False
+    return ["Not transit", "Transit"][is_transit]
 
 # Елемент * x множини Х будемо називати найкращим з огляду на
 # відношення R, якщо x R x * справедливе для всякого елемента x∈ X .
@@ -141,6 +157,7 @@ print(f"Our R is: \n{r}\n")
 
 print(check_refl(r))
 print(check_sym(r))
+print(check_transit(r))
 
 try:
     r_1 = r**(-1)
