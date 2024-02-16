@@ -71,6 +71,9 @@ def check_sym(r):
 
 def check_transit(r):
     r_2 = r**2
+    r_2[r_2>1] = 1
+    
+    print(r_2)
 
     is_transit = False
 
