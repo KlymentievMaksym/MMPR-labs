@@ -72,7 +72,7 @@ def check_sym(r):
 def check_transit(r):
     r_2 = r**2
     r_2[r_2>1] = 1
-    
+
     print(r_2)
 
     is_transit = False
@@ -104,11 +104,13 @@ def find_best_and_worst(r, is_row=True, goal=1):
 
 
 def strong_relation(r):
-    r_s = np.zeros_like(r)
-    for i in range(r.shape[0]):
-        for j in range(r.shape[1]):
-            if (r[i, j] or r[j, i]) != 0 and (r[j, i] == 0):
-                r_s[i, j] = 1
+    # r_s = np.zeros_like(r)
+    r_s = r - r.T
+    r_s[r_s < 0] = 0
+    # for i in range(r.shape[0]):
+    #     for j in range(r.shape[1]):
+    #         if (r[i, j] or r[j, i]) != 0 and (r[j, i] == 0):
+    #             r_s[i, j] = 1
     return r_s
 
 
@@ -149,6 +151,6 @@ try:
     r_1 = r**(-1)
     print(f"\nR^(-1) is: \n{r_1}")
 except np.linalg.LinAlgError:
-    print("\nIt doesn't have inverse (R^(-1))")
+    print(f"\nIt doesn't have inverse (R^(-1)), so heres comes transposition: \n{r.T}")
 
 print(f"\nR addition is: \n{addition(r)}")
