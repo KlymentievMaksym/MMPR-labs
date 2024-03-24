@@ -11,18 +11,18 @@ import numpy as np
 # [1, 0, 1, 1, 1]
 # [0, 1, 0, 0, 0]
 
-r = np.matrix([[1, 1, 0, 1, 0],
-               [1, 1, 1, 1, 0],
-               [0, 0, 0, 0, 1],
-               [1, 0, 1, 1, 1],
-               [0, 1, 0, 0, 0]])
+# r = np.matrix([[1, 1, 0, 1, 0],
+#                [1, 1, 1, 1, 0],
+#                [0, 0, 0, 0, 1],
+#                [1, 0, 1, 1, 1],
+#                [0, 1, 0, 0, 0]])
 
-# r = np.matrix([[0, 1, 0, 1],
-#                [0, 0, 1, 0],
-#                [1, 1, 1, 0],
-#                [1, 0, 1, 1]])
+# r = np.matrix([[0, 0, 0, 0],
+#                [0, 1, 1, 1],
+#                [0, 1, 1, 1],
+#                [0, 0, 0, 0]])
 
-# r = np.matrix([[1, 1, 1],[1, 1, 1],[1, 1, 1]])
+r = np.matrix([[1, 0, 0],[1, 0, 1],[0, 1, 1]])
 
 
 def check_refl(r):
@@ -50,21 +50,17 @@ def check_refl(r):
 
 def check_sym(r):
 
-    is_sym = False
-    is_asym = False
-    is_antisym = False
+    is_sym = True
+    is_asym = True
+    is_antisym = True
 
     for i in range(r.shape[0]):
         for j in range(r.shape[1]):
-            if r[i, j] == r[j, i] and i != j:
-                is_sym = True
-            elif is_sym and r[i, j] != r[j, i] and i != j:
+            if r[i, j] != r[j, i]:
                 is_sym = False
             elif i != j and not ((r[i, j] and r[j, i]) == 0):
-                is_antisym = True
-            if r[i, j] and r[j, i]:
-                is_asym = True
-            else:
+                is_antisym = False
+            if r[i, j] == 1 and r[j, i] == 1:
                 is_asym = False
     return ["Neither sym nor antisym", ["Sym", "Antisym"][is_antisym]][is_sym or is_antisym] + [", Not asym", ", Asym"][is_asym]
 
@@ -75,13 +71,11 @@ def check_transit(r):
 
     print(r_2)
 
-    is_transit = False
+    is_transit = True
 
     for i in range(r.shape[0]):
         for j in range(r.shape[1]):
-            if r_2[i, j] <= r[i, j]:
-                is_transit = True
-            elif is_transit and r_2[i, j] > r[i, j]:
+            if r_2[i, j] > r[i, j]:
                 is_transit = False
     return ["Not transit", "Transit"][is_transit]
 
