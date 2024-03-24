@@ -29,20 +29,14 @@ def check_refl(r):
     i = 0
     j = 0
 
-    is_refl = False
-    is_antirefl = False
+    is_refl = True
+    is_antirefl = True
 
     while i != r.shape[0] and j != r.shape[1]:
-        if r[i, j] == 1:
-            is_refl = True
-        elif is_refl and r[i, j] == 0:
+        if r[i, i] != 1:
             is_refl = False
-            break
-        elif r[i, j] == 0:
-            is_antirefl = True
-        elif is_antirefl and r[i, j] == 1:
+        elif r[i, i] != 0:
             is_antirefl = False
-            break
         i += 1
         j += 1
     return ["Neither refl nor antirefl", ["Refl", "Antirefl"][is_antirefl]][is_refl or is_antirefl]
